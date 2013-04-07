@@ -43,7 +43,7 @@ CGFloat result1 = [testString scoreAgainst:@"Hello world!"];
 CGFloat result2 = [testString scoreAgainst:@"world"];
 CGFloat result3 = [testString scoreAgainst:@"wXrld" fuzziness:[NSNumber numberWithFloat:0.8]];
 CGFloat result4 = [testString scoreAgainst:@"world" fuzziness:nil options:NSStringScoreOptionFavorSmallerWords];
-CGFloat result5 = [testString scoreAgainst:@"world" fuzziness:nil options:(NSStringScoreOptionFavorSmallerWords & NSStringScoreOptionReducedLongStringPenalty)];
+CGFloat result5 = [testString scoreAgainst:@"world" fuzziness:nil options:(NSStringScoreOptionFavorSmallerWords | NSStringScoreOptionReducedLongStringPenalty)];
 CGFloat result6 = [testString scoreAgainst:@"HW"]; // abbreviation matching example
 
 NSLog(@"Result 1 = %f", result1);
