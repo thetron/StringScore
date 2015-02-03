@@ -5,15 +5,14 @@
 //  Copyright (c) 2011 Involved Pty Ltd. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+@import UIKit;
 
-enum{
-    NSStringScoreOptionNone                         = 1 << 0,
-    NSStringScoreOptionFavorSmallerWords            = 1 << 1,
-    NSStringScoreOptionReducedLongStringPenalty     = 1 << 2
+typedef NS_OPTIONS(NSUInteger, NSStringScoreOption) {
+	NSStringScoreOptionNone                         = 1 << 0,
+	NSStringScoreOptionFavorSmallerWords            = 1 << 1,
+	NSStringScoreOptionReducedLongStringPenalty     = 1 << 2
 };
-
-typedef NSUInteger NSStringScoreOption;
 
 @interface NSString (Score)
 
