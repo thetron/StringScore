@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary      = "StringScore is an Objective-C library which provides super fast fuzzy string matching/scoring. Based on the JavaScript library of the same name."
   s.homepage     = "https://github.com/yichizhang/" + s.name
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
-  s.author       = { "Yichi Zhang" => "zhang-yi-chi@hotmail.com" }
+  s.author       = { "Nicholas Bruning" => "nicholas@bruning.com.au" }
   s.source       = {
     :git => "https://github.com/yichizhang/" + s.name + ".git",
     :tag => s.version.to_s
