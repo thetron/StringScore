@@ -62,11 +62,11 @@ The resulting output is:
 
 ````
 Result 1 = 1.000000
-Result 2 = 0.528889
-Result 3 = 0.361111
-Result 4 = 0.377778
+Result 2 = 0.000000
+Result 3 = 0.528889
+Result 4 = 0.361111
 Result 5 = 0.377778
-Result 6 = 0.000000
+Result 6 = 0.377778
 ````
 
 ## Credits
