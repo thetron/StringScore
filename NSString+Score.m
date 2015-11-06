@@ -20,16 +20,14 @@
 }
 
 - (CGFloat) scoreAgainst:(NSString *)anotherString fuzziness:(NSNumber *)fuzziness options:(NSStringScoreOption)options{
-	NSMutableCharacterSet *workingInvalidCharacterSet = [NSMutableCharacterSet letterCharacterSet];
-    [workingInvalidCharacterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSCharacterSet *invalidCharacterSet = [workingInvalidCharacterSet invertedSet];
-    
+	NSCharacterSet *invalidCharacterSet = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
+	
     NSString *string = [[[self decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:invalidCharacterSet] componentsJoinedByString:@""];
     NSString *otherString = [[[anotherString decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:invalidCharacterSet] componentsJoinedByString:@""];
-    
+
     // If the string is equal to the abbreviation, perfect match.
     if([string isEqualToString:otherString]) return (CGFloat) 1.0f;
-    
+	
     //if it's not a perfect match and is empty return 0
     if([otherString length] == 0) return (CGFloat) 0.0f;
     
