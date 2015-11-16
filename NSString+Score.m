@@ -51,16 +51,10 @@
     for(uint index = 0; index < otherStringLength; index++){
         CGFloat characterScore = 0.1;
         NSInteger indexInString = NSNotFound;
-        unichar chr;
-        NSRange rangeChrLowercase;
-        NSRange rangeChrUppercase;
-
-		chr = [otherString characterAtIndex:index];
-        
-        //make these next few lines leverage NSNotfound, methinks.
-        rangeChrLowercase = [string rangeOfString:[chr lowercaseString]];
-        rangeChrUppercase = [string rangeOfString:[chr uppercaseString]];
-        
+        unichar chr = [otherString characterAtIndex:index];
+		NSRange rangeChrLowercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] lowercaseString]];
+        NSRange rangeChrUppercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] uppercaseString]];
+		
         if(rangeChrLowercase.location == NSNotFound && rangeChrUppercase.location == NSNotFound){
             if(fuzziness){
                 fuzzies += 1 - [fuzziness floatValue];
