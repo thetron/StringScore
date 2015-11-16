@@ -20,8 +20,12 @@
 }
 
 - (CGFloat) scoreAgainst:(NSString *)anotherString fuzziness:(NSNumber *)fuzziness options:(NSStringScoreOption)options{
+	
+	NSMutableCharacterSet *separatorsCharacterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+	[separatorsCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet punctuationCharacterSet]];
+	
 	NSMutableCharacterSet *validCharacterSet = [NSMutableCharacterSet alphanumericCharacterSet];
-	[validCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet whitespaceCharacterSet]];
+	[validCharacterSet formUnionWithCharacterSet:separatorsCharacterSet];
 	
 	NSCharacterSet *invalidCharacterSet = [validCharacterSet invertedSet];
 	
@@ -95,7 +99,7 @@
             // Acronym Bonus
             // Weighing Logic: Typing the first character of an acronym is as if you
             // preceded it with two perfect character matches.
-            if( [[string substringWithRange:NSMakeRange(indexInString - 1, 1)] isEqualToString:@" "] ){
+			if ([separatorsCharacterSet characterIsMember:[string characterAtIndex:indexInString - 1]]) {
                 characterScore += 0.8;
             }
         }
