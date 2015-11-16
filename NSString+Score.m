@@ -107,7 +107,8 @@
 			
         totalCharacterScore += characterScore;
 		
-		if(indexInString == NSNotFound) {
+		if(indexInString == NSNotFound || index == otherStringLength - 1) {
+			// try next substring
 			bestCharacterScore = MAX(totalCharacterScore, bestCharacterScore);
 			index = 0;
 		}
