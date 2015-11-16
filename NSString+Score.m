@@ -115,10 +115,10 @@
     
     if(NSStringScoreOptionFavorSmallerWords == (options & NSStringScoreOptionFavorSmallerWords)){
         // Weigh smaller words higher
-        return totalCharacterScore / stringLength;
+        return bestCharacterScore / stringLength;
     } 
     
-    otherStringScore = totalCharacterScore / otherStringLength;
+    otherStringScore = bestCharacterScore / otherStringLength;
     
     if(NSStringScoreOptionReducedLongStringPenalty == (options & NSStringScoreOptionReducedLongStringPenalty)){
         // Reduce the penalty for longer words
