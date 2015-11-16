@@ -37,7 +37,8 @@
 	
     //if it's not a perfect match and is empty return 0
     if([otherString length] == 0) return (CGFloat) 0.0f;
-    
+	
+	CGFloat bestCharacterScore = 0;
     CGFloat totalCharacterScore = 0;
     NSUInteger otherStringLength = [otherString length];
     NSUInteger stringLength = [string length];
@@ -50,11 +51,11 @@
     for(uint index = 0; index < otherStringLength; index++){
         CGFloat characterScore = 0.1;
         NSInteger indexInString = NSNotFound;
-        NSString *chr;
+        unichar chr;
         NSRange rangeChrLowercase;
         NSRange rangeChrUppercase;
 
-        chr = [otherString substringWithRange:NSMakeRange(index, 1)];
+		chr = [otherString characterAtIndex:index];
         
         //make these next few lines leverage NSNotfound, methinks.
         rangeChrLowercase = [string rangeOfString:[chr lowercaseString]];
@@ -81,7 +82,7 @@
         // Set base score for matching chr
         
         // Same case bonus.
-        if(indexInString != NSNotFound && [[string substringWithRange:NSMakeRange(indexInString, 1)] isEqualToString:chr]){
+		if(indexInString != NSNotFound && [string characterAtIndex:indexInString] == chr){
             characterScore += 0.1;
         }
         
@@ -108,9 +109,14 @@
         // (forces sequential matching).
         if(indexInString != NSNotFound){
             string = [string substringFromIndex:indexInString + 1];
-        }
-        
+		}
+			
         totalCharacterScore += characterScore;
+		
+		if(indexInString == NSNotFound) {
+			bestCharacterScore = MAX(totalCharacterScore, bestCharacterScore);
+			index = 0;
+		}
     }
     
     if(NSStringScoreOptionFavorSmallerWords == (options & NSStringScoreOptionFavorSmallerWords)){
