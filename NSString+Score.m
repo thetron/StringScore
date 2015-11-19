@@ -36,8 +36,8 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 	}
 
 	
-    NSString *string = [[[self decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:invalidCharacterSet] componentsJoinedByString:@""];
-    NSString *otherString = [[[anotherString decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:invalidCharacterSet] componentsJoinedByString:@""];
+    NSString *string = [[[self decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:s_invalidCharacterSet] componentsJoinedByString:@""];
+    NSString *otherString = [[[anotherString decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:s_invalidCharacterSet] componentsJoinedByString:@""];
 
     // If the string is equal to the abbreviation, perfect match.
     if([string isEqualToString:otherString]) return (CGFloat) 1.0f;
@@ -100,7 +100,7 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 				// Acronym Bonus
 				// Weighing Logic: Typing the first character of an acronym is as if you
 				// preceded it with two perfect character matches.
-				if ([separatorsCharacterSet characterIsMember:[testString characterAtIndex:indexInString - 1]]) {
+				if ([s_separatorsCharacterSet characterIsMember:[testString characterAtIndex:indexInString - 1]]) {
 					characterScore += 0.8;
 				}
 			}
