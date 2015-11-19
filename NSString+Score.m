@@ -58,8 +58,8 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 		CGFloat characterScore = 0.1;
 		NSInteger indexInString = NSNotFound;
 		unichar chr = [otherString characterAtIndex:index];
-		NSRange rangeChrLowercase = [testString rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] lowercaseString]];
-		NSRange rangeChrUppercase = [testString rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] uppercaseString]];
+		NSRange rangeChrLowercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] lowercaseString]];
+		NSRange rangeChrUppercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] uppercaseString]];
 		
 		//make these next few lines leverage NSNotfound, methinks.
 		rangeChrLowercase = [string rangeOfString:[chr lowercaseString]];
@@ -90,7 +90,7 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 		if(indexInString == 0){
 			// Increase the score when matching first character of the remainder of the string
 			characterScore += 0.6;
-			if(index == 0 && testStringStartingIndex == 0){
+			if(index == 0){
 				// If match is the first character of the string
 				// & the first character of abbreviation, add a
 				// start-of-string match bonus.
