@@ -39,7 +39,6 @@
     if([otherString length] == 0) return (CGFloat) 0.0f;
 	
 	CGFloat bestCharacterScore = 0;
-    CGFloat totalCharacterScore = 0;
     NSUInteger otherStringLength = [otherString length];
     NSUInteger stringLength = [string length];
     BOOL startOfStringBonus = NO;
@@ -49,6 +48,7 @@
 	
 	for (NSInteger testStringStartingIndex = 0; testStringStartingIndex < stringLength; testStringStartingIndex++) {
 		NSString *testString = [string substringFromIndex:testStringStartingIndex];
+		CGFloat totalCharacterScore = 0;
 		// Walk through abbreviation and add up scores.
 		for(uint index = 0; index < otherStringLength; index++){
 			CGFloat characterScore = 0.1;
