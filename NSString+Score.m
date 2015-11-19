@@ -49,6 +49,7 @@
 	for (NSInteger testStringStartingIndex = 0; testStringStartingIndex < stringLength; testStringStartingIndex++) {
 		NSString *testString = [string substringFromIndex:testStringStartingIndex];
 		CGFloat totalCharacterScore = 0;
+
 		// Walk through abbreviation and add up scores.
 		for(uint index = 0; index < otherStringLength; index++){
 			CGFloat characterScore = 0.1;
@@ -82,7 +83,7 @@
 			if(indexInString == 0){
 				// Increase the score when matching first character of the remainder of the string
 				characterScore += 0.6;
-				if(index == 0){
+				if(index == 0 && testStringStartingIndex == 0){
 					// If match is the first character of the string
 					// & the first character of abbreviation, add a
 					// start-of-string match bonus.
