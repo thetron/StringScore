@@ -47,76 +47,72 @@
     CGFloat fuzzies = 1;
     CGFloat finalScore;
 	
-	BOOL wasTrimmed = NO;
-    // Walk through abbreviation and add up scores.
-    for(uint index = 0; index < otherStringLength; index++){
-        CGFloat characterScore = 0.1;
-        NSInteger indexInString = NSNotFound;
-        unichar chr = [otherString characterAtIndex:index];
-		NSRange rangeChrLowercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] lowercaseString]];
-        NSRange rangeChrUppercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] uppercaseString]];
-		
-        if(rangeChrLowercase.location == NSNotFound && rangeChrUppercase.location == NSNotFound){
-            if(fuzziness){
-                fuzzies += 1 - [fuzziness floatValue];
-            } else {
-                return 0; // this is an error!
-            }
-            
-        } else if (rangeChrLowercase.location != NSNotFound && rangeChrUppercase.location != NSNotFound){
-            indexInString = MIN(rangeChrLowercase.location, rangeChrUppercase.location);
-            
-        } else if(rangeChrLowercase.location != NSNotFound || rangeChrUppercase.location != NSNotFound){
-            indexInString = rangeChrLowercase.location != NSNotFound ? rangeChrLowercase.location : rangeChrUppercase.location;
-            
-        } else {
-            indexInString = MIN(rangeChrLowercase.location, rangeChrUppercase.location);
-            
-        }
-        
-        // Set base score for matching chr
-        
-        // Same case bonus.
-		if(indexInString != NSNotFound && [string characterAtIndex:indexInString] == chr){
-            characterScore += 0.1;
-        }
-        
-        // Consecutive letter & start-of-string bonus
-        if(indexInString == 0){
-            // Increase the score when matching first character of the remainder of the string
-            characterScore += 0.6;
-            if(index == 0){
-                // If match is the first character of the string
-                // & the first character of abbreviation, add a
-                // start-of-string match bonus.
-                startOfStringBonus = YES;
-            }
-        } else if(indexInString != NSNotFound) {
-            // Acronym Bonus
-            // Weighing Logic: Typing the first character of an acronym is as if you
-            // preceded it with two perfect character matches.
-			if ([separatorsCharacterSet characterIsMember:[string characterAtIndex:indexInString - 1]]) {
-                characterScore += 0.8;
-            }
-        }
-		
-		totalCharacterScore += characterScore;
+	for (NSInteger testStringStartingIndex = 0; testStringStartingIndex < stringLength; testStringStartingIndex++) {
+		NSString *testString = [string substringFromIndex:testStringStartingIndex];
+		NSInteger indexOfFirstChar = NSNotFound;
+		// Walk through abbreviation and add up scores.
+		for(uint index = 0; index < otherStringLength; index++){
+			CGFloat characterScore = 0.1;
+			NSInteger indexInString = NSNotFound;
+			unichar chr = [otherString characterAtIndex:index];
+			NSRange rangeChrLowercase = [testString rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] lowercaseString]];
+			NSRange rangeChrUppercase = [testString rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] uppercaseString]];
+			
+			if(rangeChrLowercase.location == NSNotFound && rangeChrUppercase.location == NSNotFound){
+				if(fuzziness){
+					fuzzies += 1 - [fuzziness floatValue];
+				} else {
+					return 0; // this is an error!
+				}
+			} else if (rangeChrLowercase.location != NSNotFound && rangeChrUppercase.location != NSNotFound){
+				indexInString = MIN(rangeChrLowercase.location, rangeChrUppercase.location);
+			} else if(rangeChrLowercase.location != NSNotFound || rangeChrUppercase.location != NSNotFound){
+				indexInString = rangeChrLowercase.location != NSNotFound ? rangeChrLowercase.location : rangeChrUppercase.location;
+			} else {
+				indexInString = MIN(rangeChrLowercase.location, rangeChrUppercase.location);
+			}
+			
+			if (index == 0) {
+				indexOfFirstChar = indexInString
+			}
+			
+			// Set base score for matching chr
+			
+			// Same case bonus.
+			if(indexInString != NSNotFound && [testString characterAtIndex:indexInString] == chr){
+				characterScore += 0.1;
+			}
+			
+			// Consecutive letter & start-of-string bonus
+			if(indexInString == 0){
+				// Increase the score when matching first character of the remainder of the string
+				characterScore += 0.6;
+				if(index == 0){
+					// If match is the first character of the string
+					// & the first character of abbreviation, add a
+					// start-of-string match bonus.
+					startOfStringBonus = YES;
+				}
+			} else if(indexInString != NSNotFound) {
+				// Acronym Bonus
+				// Weighing Logic: Typing the first character of an acronym is as if you
+				// preceded it with two perfect character matches.
+				if ([separatorsCharacterSet characterIsMember:[testString characterAtIndex:indexInString - 1]]) {
+					characterScore += 0.8;
+				}
+			}
+			
+			totalCharacterScore += characterScore;
 
-        // Left trim the already matched part of the string
-        // (forces sequential matching).
-        if(indexInString != NSNotFound){
-            string = [string substringFromIndex:indexInString + 1];
-			wasTrimmed = YES;
+			// Left trim the already matched part of the string
+			// (forces sequential matching).
+			if(indexInString != NSNotFound){
+				testString = [testString substringFromIndex:indexInString + 1];
+			}
 		}
-		
-		if (wasTrimmed && index == otherStringLength - 1) {
-			// try next substring
-			bestCharacterScore = MAX(totalCharacterScore, bestCharacterScore);
-			index = 0;
-			wasTrimmed = NO;
-		}
-    }
-    
+		bestCharacterScore = MAX(totalCharacterScore, bestCharacterScore);
+	}
+	
     if(NSStringScoreOptionFavorSmallerWords == (options & NSStringScoreOptionFavorSmallerWords)){
         // Weigh smaller words higher
         return bestCharacterScore / stringLength;
