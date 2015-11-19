@@ -9,6 +9,8 @@
 
 #import "NSString+Score.h"
 
+static NSCharacterSet *invalidCharacterSet = nil;
+
 @implementation NSString (Score)
 
 - (CGFloat) scoreAgainst:(NSString *)otherString{
@@ -20,14 +22,17 @@
 }
 
 - (CGFloat) scoreAgainst:(NSString *)anotherString fuzziness:(NSNumber *)fuzziness options:(NSStringScoreOption)options{
-	
-	NSMutableCharacterSet *separatorsCharacterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-	[separatorsCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet punctuationCharacterSet]];
-	
-	NSMutableCharacterSet *validCharacterSet = [NSMutableCharacterSet alphanumericCharacterSet];
-	[validCharacterSet formUnionWithCharacterSet:separatorsCharacterSet];
-	
-	NSCharacterSet *invalidCharacterSet = [validCharacterSet invertedSet];
+
+	if (invalidCharacterSet == nil) {
+		NSMutableCharacterSet *separatorsCharacterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+		[separatorsCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet punctuationCharacterSet]];
+		
+		NSMutableCharacterSet *validCharacterSet = [NSMutableCharacterSet alphanumericCharacterSet];
+		[validCharacterSet formUnionWithCharacterSet:separatorsCharacterSet];
+		
+		NSCharacterSet *invalidCharacterSet = [validCharacterSet invertedSet];
+	}
+
 	
     NSString *string = [[[self decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:invalidCharacterSet] componentsJoinedByString:@""];
     NSString *otherString = [[[anotherString decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:invalidCharacterSet] componentsJoinedByString:@""];
