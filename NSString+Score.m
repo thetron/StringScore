@@ -46,7 +46,8 @@
     CGFloat otherStringScore;
     CGFloat fuzzies = 1;
     CGFloat finalScore;
-        
+	
+	BOOL wasTrimmed = NO;
     // Walk through abbreviation and add up scores.
     for(uint index = 0; index < otherStringLength; index++){
         CGFloat characterScore = 0.1;
@@ -98,19 +99,21 @@
                 characterScore += 0.8;
             }
         }
-        
+		
+		totalCharacterScore += characterScore;
+
         // Left trim the already matched part of the string
         // (forces sequential matching).
         if(indexInString != NSNotFound){
             string = [string substringFromIndex:indexInString + 1];
+			wasTrimmed = YES;
 		}
-			
-        totalCharacterScore += characterScore;
 		
-		if(index == otherStringLength - 1) {
+		if (wasTrimmed && index == otherStringLength - 1) {
 			// try next substring
 			bestCharacterScore = MAX(totalCharacterScore, bestCharacterScore);
 			index = 0;
+			wasTrimmed = NO;
 		}
     }
     
