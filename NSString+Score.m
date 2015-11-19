@@ -61,10 +61,6 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 		NSRange rangeChrLowercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] lowercaseString]];
 		NSRange rangeChrUppercase = [string rangeOfString:[[otherString substringWithRange:NSMakeRange(index, 1)] uppercaseString]];
 		
-		//make these next few lines leverage NSNotfound, methinks.
-		rangeChrLowercase = [string rangeOfString:[chr lowercaseString]];
-		rangeChrUppercase = [string rangeOfString:[chr uppercaseString]];
-		
 		if(rangeChrLowercase.location == NSNotFound && rangeChrUppercase.location == NSNotFound){
 			if(fuzziness){
 				fuzzies += 1 - [fuzziness floatValue];
