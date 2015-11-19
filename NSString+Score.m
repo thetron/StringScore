@@ -9,7 +9,8 @@
 
 #import "NSString+Score.h"
 
-static NSCharacterSet *invalidCharacterSet = nil;
+static NSCharacterSet *s_invalidCharacterSet = nil;
+static NSCharacterSet *s_separatorsCharacterSet = nil;
 
 @implementation NSString (Score)
 
@@ -23,14 +24,15 @@ static NSCharacterSet *invalidCharacterSet = nil;
 
 - (CGFloat) scoreAgainst:(NSString *)anotherString fuzziness:(NSNumber *)fuzziness options:(NSStringScoreOption)options{
 
-	if (invalidCharacterSet == nil) {
+	if (s_invalidCharacterSet == nil) {
 		NSMutableCharacterSet *separatorsCharacterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
 		[separatorsCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet punctuationCharacterSet]];
+		s_separatorsCharacterSet = separatorsCharacterSet;
 		
 		NSMutableCharacterSet *validCharacterSet = [NSMutableCharacterSet alphanumericCharacterSet];
-		[validCharacterSet formUnionWithCharacterSet:separatorsCharacterSet];
+		[validCharacterSet formUnionWithCharacterSet:s_separatorsCharacterSet];
 		
-		NSCharacterSet *invalidCharacterSet = [validCharacterSet invertedSet];
+		s_invalidCharacterSet = [validCharacterSet invertedSet];
 	}
 
 	
