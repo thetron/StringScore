@@ -49,7 +49,6 @@
 	
 	for (NSInteger testStringStartingIndex = 0; testStringStartingIndex < stringLength; testStringStartingIndex++) {
 		NSString *testString = [string substringFromIndex:testStringStartingIndex];
-		NSInteger indexOfFirstChar = NSNotFound;
 		// Walk through abbreviation and add up scores.
 		for(uint index = 0; index < otherStringLength; index++){
 			CGFloat characterScore = 0.1;
@@ -70,10 +69,6 @@
 				indexInString = rangeChrLowercase.location != NSNotFound ? rangeChrLowercase.location : rangeChrUppercase.location;
 			} else {
 				indexInString = MIN(rangeChrLowercase.location, rangeChrUppercase.location);
-			}
-			
-			if (index == 0) {
-				indexOfFirstChar = indexInString
 			}
 			
 			// Set base score for matching chr
