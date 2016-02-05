@@ -9,7 +9,6 @@
 
 #import "NSString+Score.h"
 
-static NSCharacterSet *s_invalidCharacterSet = nil;
 static NSCharacterSet *s_separatorsCharacterSet = nil;
 
 @implementation NSString (Score)
@@ -24,20 +23,15 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 
 - (CGFloat) scoreAgainst:(NSString *)anotherString fuzziness:(NSNumber *)fuzziness options:(NSStringScoreOption)options{
 
-	if (s_invalidCharacterSet == nil) {
+	if (s_separatorsCharacterSet == nil) {
 		NSMutableCharacterSet *separatorsCharacterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
 		[separatorsCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet punctuationCharacterSet]];
 		s_separatorsCharacterSet = separatorsCharacterSet;
-		
-		NSMutableCharacterSet *validCharacterSet = [NSMutableCharacterSet alphanumericCharacterSet];
-		[validCharacterSet formUnionWithCharacterSet:s_separatorsCharacterSet];
-		
-		s_invalidCharacterSet = [validCharacterSet invertedSet];
 	}
 
 	
-    NSString *string = [[[self decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:s_invalidCharacterSet] componentsJoinedByString:@""];
-    NSString *otherString = [[[anotherString decomposedStringWithCanonicalMapping] componentsSeparatedByCharactersInSet:s_invalidCharacterSet] componentsJoinedByString:@""];
+    NSString *string = [self decomposedStringWithCanonicalMapping];
+    NSString *otherString = [anotherString decomposedStringWithCanonicalMapping];
 
     // If the string is equal to the abbreviation, perfect match.
     if([string isEqualToString:otherString]) return (CGFloat) 1.0f;
