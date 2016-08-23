@@ -144,6 +144,12 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 		return 0;
 	}
 	
+	if (s_separatorsCharacterSet == nil) {
+		NSMutableCharacterSet *separatorsCharacterSet = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+		[separatorsCharacterSet formUnionWithCharacterSet:[NSMutableCharacterSet punctuationCharacterSet]];
+		s_separatorsCharacterSet = separatorsCharacterSet;
+	}
+	
 	CGFloat runningScore(0), charScore (0), finalScore(0);
 	
 	NSString *string = self;
@@ -186,7 +192,7 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 				// Acronym Bonus
 				// Weighing Logic: Typing the first character of an acronym is as if you
 				// preceded it with two perfect character matches.
-				if ([[NSCharacterSet whitespaceCharacterSet] characterIsMember:[string characterAtIndex:idxOf - 1]]) {
+				if ([s_separatorsCharacterSet characterIsMember:[string characterAtIndex:idxOf - 1]]) {
 					charScore += 0.8;
 				}
 			}
