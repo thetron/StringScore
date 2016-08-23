@@ -18,6 +18,6 @@ StringScore is an Objective-C library which provides super fast fuzzy string mat
   s.author    = "zalexej"
   s.platform     = :ios
   s.source       = { :git => "https://github.com/zalexej/StringScore.git", :tag => "0.0.1" }
-  s.source_files  = "NSString+Score.{h,m}"
+  s.source_files  = "NSString+Score.{h,mm}"
   s.requires_arc = true
 end
