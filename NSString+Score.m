@@ -130,4 +130,96 @@ static NSCharacterSet *s_separatorsCharacterSet = nil;
 	return finalScore;
 }
 
+
+// ported from https://github.com/zalexej/StringScore_Swift.git
+- (CGFloat) scoreWithString:(NSString *)otherString fuzziness:(NSNumber *)fuzziness
+{
+	// If the string is equal to the word, perfect match.
+	if ([self isEqualToString:otherString]) {
+		return 1;
+	}
+	
+	//if it's not a perfect match and is empty return 0
+	if (otherString.length == 0 || self.length == 0) {
+		return 0;
+	}
+	
+	CGFloat runningScore(0), charScore (0), finalScore(0);
+	
+	NSString *string = self;
+	NSString *lString = [string lowercaseString];
+	NSUInteger strLength = string.length;
+	
+	NSString *lWord = [otherString lowercaseString];
+	NSUInteger wordLength = otherString.length;
+
+	NSUInteger idxOf(NSNotFound);
+	NSUInteger startAt = 0;
+	
+	CGFloat fuzzies(1), fuzzyFactor(0);
+	BOOL fuzzinessIsNil = YES;
+	
+	// Cache fuzzyFactor for speed increase
+	if (fuzziness) {
+		fuzzyFactor = 1 - [fuzziness doubleValue];
+		fuzzinessIsNil = NO;
+	}
+	
+	for (NSUInteger i = 0; i < wordLength; i++) {
+		// Find next first case-insensitive match of word's i-th character.
+		// The search in "string" begins at "startAt".
+		
+		NSRange range = [lString rangeOfString:[lWord substringWithRange:NSMakeRange(i, 1)]
+									   options:NSCaseInsensitiveSearch
+										 range:NSMakeRange(startAt, strLength - startAt)
+										locale:nil];
+						 
+		if (range.location != NSNotFound) {
+			// start index of word's i-th character in string.
+			idxOf = range.location;
+			if (startAt == idxOf) {
+				// Consecutive letter & start-of-string Bonus
+				charScore = 0.7;
+			} else {
+				charScore = 0.1;
+				
+				// Acronym Bonus
+				// Weighing Logic: Typing the first character of an acronym is as if you
+				// preceded it with two perfect character matches.
+				if ([[NSCharacterSet whitespaceCharacterSet] characterIsMember:[string characterAtIndex:idxOf - 1]]) {
+					charScore += 0.8;
+				}
+			}
+		}
+		else {
+			// Character not found.
+			if (fuzzinessIsNil) {
+				// Fuzziness is nil. Return 0.
+				return 0;
+			}
+			else {
+				fuzzies += fuzzyFactor;
+				continue;
+			}
+		}
+		
+		// Same case bonus.
+		if ([string characterAtIndex:idxOf] == [otherString characterAtIndex:i]) {
+			charScore += 0.1;
+		}
+		
+		// Update scores and startAt position for next round of indexOf
+		runningScore += charScore;
+		startAt = idxOf + 1;
+	}
+	
+	// Reduce penalty for longer strings.
+	finalScore = 0.5 * (runningScore / strLength + runningScore / wordLength) / fuzzies;
+	
+	if (([lWord characterAtIndex:0] == [lString characterAtIndex:0]) && (finalScore < 0.85)) {
+		finalScore += 0.15;
+	}
+	
+	return finalScore;
+}
 @end
